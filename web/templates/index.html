@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>OpenEvidence — GLP-1 Clinical Intelligence</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/app.css" />
+    <style>
+      .hidden {
+        display: none !important;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="app-shell app-shell-with-placement">
+      <nav class="sidebar" aria-label="Main">
+        <button type="button" title="Home" class="active">☰</button>
+        <button type="button" id="btn-new-visit" title="New visit">✎</button>
+        <a href="/dashboard" title="Rep dashboard" style="text-decoration: none">
+          <button type="button">📊</button>
+        </a>
+      </nav>
+
+      <header class="topbar">
+        <div class="logo">Open<span>Evidence</span> <small style="font-weight:400;color:#6b7280;font-size:0.75rem">GLP-1</small></div>
+        <div class="topbar-actions">
+          <button class="btn" type="button" id="btn-share">Share</button>
+          <button class="btn btn-primary" type="button" id="btn-new-visit-top">New Visit ▾</button>
+          <a href="/dashboard" class="btn" title="Chat answers are tracked automatically">Rep Dashboard</a>
+        </div>
+      </header>
+
+      <aside class="placement-panel" id="placement-panel" aria-label="Company placement">
+        <div class="placement-header">
+          <strong>Your company</strong>
+          <span class="placement-badge">Sales rep placement</span>
+        </div>
+        <p class="placement-hint" style="font-size:0.8rem;margin-top:8px">
+          Platform chat updates the <a href="/dashboard">rep dashboard</a> automatically.
+        </p>
+        <p class="placement-hint">
+          Enter the pharma company you represent. We look up their GLP-1 therapies (openFDA + curated data) and prioritize them in answers.
+        </p>
+        <label>
+          Company name
+          <input
+            type="text"
+            id="company-name"
+            placeholder="e.g. Eli Lilly, Novo Nordisk, AstraZeneca"
+            value=""
+            autocomplete="off"
+          />
+        </label>
+        <button type="button" class="btn btn-primary placement-save" id="btn-discover">
+          Discover drugs & apply
+        </button>
+        <label class="placement-toggle">
+          <input type="checkbox" id="placement-enabled" checked /> Placement active
+        </label>
+        <div id="discovered-drugs" class="discovered-drugs"></div>
+        <p id="placement-status" class="placement-status"></p>
+      </aside>
+
+      <main class="main">
+        <div class="chat-container">
+          <div id="empty-state" class="empty-state">
+            <h2>Ask a clinical question</h2>
+            <p>Evidence from SURPASS, SURMOUNT, SELECT, and GLP-1 labeling — with citations.</p>
+            <div id="suggestions" class="suggestions"></div>
+          </div>
+          <div id="chat"></div>
+        </div>
+      </main>
+
+      <div class="composer-wrap">
+        <div id="attachment-badge" class="attachment-badge hidden"></div>
+        <form class="composer" onsubmit="return false">
+          <textarea
+            id="composer-input"
+            rows="1"
+            placeholder="Ask a follow up…"
+            aria-label="Clinical question"
+          ></textarea>
+          <div class="composer-actions">
+            <button type="button" id="btn-attach" title="Attach file (.txt, .md, .csv)">📎</button>
+            <button type="button" class="send" id="btn-send" title="Send">↑</button>
+          </div>
+        </form>
+        <input type="file" id="file-input" accept=".txt,.md,.csv" style="display:none" />
+      </div>
+      <div id="toast" class="toast" aria-live="polite"></div>
+    </div>
+    <script>
+      document.getElementById("btn-new-visit-top")?.addEventListener("click", () => {
+        document.getElementById("btn-new-visit")?.click();
+      });
+    </script>
+    <script src="/static/js/app.js"></script>
+  </body>
+</html>

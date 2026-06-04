@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Rep Dashboard — GLP-1 AI Visibility</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="/static/css/app.css" />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+    <style>
+      .hidden {
+        display: none;
+      }
+      .hint {
+        color: var(--oe-muted);
+        padding: 24px;
+        text-align: center;
+      }
+      .topnav {
+        display: flex;
+        gap: 16px;
+        padding: 16px 24px;
+        background: var(--oe-surface);
+        border-bottom: 1px solid var(--oe-border);
+      }
+      .kpi-card .sub {
+        font-size: 0.75rem;
+        color: var(--oe-muted);
+        margin-top: 4px;
+      }
+      .kpi-card .trend-up {
+        color: #16a34a;
+      }
+      .kpi-card .trend-down {
+        color: #dc2626;
+      }
+      .charts-grid {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 16px;
+      }
+      @media (max-width: 900px) {
+        .charts-grid {
+          grid-template-columns: 1fr;
+        }
+      }
+    </style>
+  </head>
+  <body class="dashboard-shell">
+    <nav class="topnav">
+      <a href="/" class="logo">Open<span style="color: var(--oe-orange)">Evidence</span></a>
+      <span style="color: var(--oe-muted)">/</span>
+      <strong>Rep Dashboard</strong>
+      <div style="flex: 1"></div>
+      <a href="/">← Back to platform</a>
+    </nav>
+
+    <div class="dashboard-main">
+      <div class="dashboard-header">
+        <div>
+          <h1 id="dashboard-title">Sales rep dashboard — GLP-1 AI visibility</h1>
+          <p id="dashboard-subtitle">Each platform question adds a new point on the charts below</p>
+        </div>
+        <div style="display:flex;gap:8px;flex-wrap:wrap">
+          <button class="btn btn-primary" type="button" id="btn-run-audit">Run audit now</button>
+        </div>
+      </div>
+
+      <div class="kpi-grid">
+        <div class="kpi-card">
+          <div class="label">Share of voice (latest)</div>
+          <div class="value lilly" id="kpi-sov">—</div>
+          <div class="sub" id="kpi-sov-sub">10-question avg: —</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Visibility rate (latest)</div>
+          <div class="value" id="kpi-visibility">—</div>
+          <div class="sub" id="kpi-visibility-sub">% of answers mentioning your drugs</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Favorable rate (latest)</div>
+          <div class="value" id="kpi-favorable-rate">—</div>
+          <div class="sub" id="kpi-favorable-sub">10-question avg: —</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Favorability index</div>
+          <div class="value" id="kpi-fav-index">—</div>
+          <div class="sub" id="kpi-fav-index-sub">Latest tone score (0–100)</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Chat questions tracked</div>
+          <div class="value" id="kpi-chat">0</div>
+        </div>
+        <div class="kpi-card">
+          <div class="label">Total snapshots</div>
+          <div class="value" id="kpi-runs">0</div>
+          <div class="sub" id="kpi-runs-sub">chat + audit batteries</div>
+        </div>
+      </div>
+
+      <p id="dashboard-error" class="hint hidden" style="color:#b45309;text-align:left"></p>
+
+      <p id="no-data-hint" class="hint hidden">
+        No data yet. Ask questions on the <a href="/">platform chat</a> — each answer adds a chart point.
+        Or run a full <strong>8-prompt audit</strong> for a benchmark snapshot.
+      </p>
+
+      <div class="charts-grid">
+        <div class="chart-card">
+          <h3 id="chart-sov-title">Share of voice over time</h3>
+          <div class="chart-wrap"><canvas id="chart-sov"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3 id="chart-vis-title">Visibility rate over time</h3>
+          <p style="font-size:0.8rem;color:var(--oe-muted);margin:0 0 8px">Did the AI mention your company’s drugs?</p>
+          <div class="chart-wrap"><canvas id="chart-visibility"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Favorable rate over time</h3>
+          <p style="font-size:0.8rem;color:var(--oe-muted);margin:0 0 8px">% of snapshots scored favorable</p>
+          <div class="chart-wrap"><canvas id="chart-favorable"></canvas></div>
+        </div>
+        <div class="chart-card">
+          <h3>Favorability index over time</h3>
+          <p style="font-size:0.8rem;color:var(--oe-muted);margin:0 0 8px">Tone score: favorable=100, neutral=55, unfavorable=15, absent=0</p>
+          <div class="chart-wrap"><canvas id="chart-index"></canvas></div>
+        </div>
+      </div>
+
+      <div class="chart-card">
+        <h3>Activity log</h3>
+        <table class="runs-table">
+          <thead>
+            <tr>
+              <th>When</th>
+              <th>Type</th>
+              <th>Question / run</th>
+              <th>SOV</th>
+              <th>Visible</th>
+              <th>Favorable</th>
+              <th>Tone</th>
+              <th id="th-brand-mentions">Co. mentions</th>
+              <th>Comp.</th>
+            </tr>
+          </thead>
+          <tbody id="runs-tbody"></tbody>
+        </table>
+      </div>
+    </div>
+  </body>
+</html>

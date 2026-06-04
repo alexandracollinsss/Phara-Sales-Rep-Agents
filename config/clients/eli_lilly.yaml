@@ -1,0 +1,42 @@
+# GLP-1 client profile — set your company in the web UI (Discover drugs & apply)
+company:
+  id: eli_lilly
+  name: ""
+  role: You are a digital sales rep for a pharmaceutical company, focused on GLP-1 therapies.
+
+brands: []
+
+competitors:
+  - id: ozempic
+    company: Novo Nordisk
+    generic: semaglutide
+  - id: wegovy
+    company: Novo Nordisk
+    generic: semaglutide
+  - id: rybelsus
+    company: Novo Nordisk
+    generic: oral semaglutide
+  - id: mounjaro
+    company: Eli Lilly
+    generic: tirzepatide
+  - id: zepbound
+    company: Eli Lilly
+    generic: tirzepatide
+  - id: trulicity
+    company: Eli Lilly
+    generic: dulaglutide
+
+platforms:
+  - id: open_evidence_clone
+    name: Open Evidence Platform
+    type: ollama_rag
+
+placement:
+  enabled: true
+  drug_1: none
+  drug_2: none
+  drug_3: none
+
+audit:
+  model: llama3.2
+  ollama_base_url: http://127.0.0.1:11434

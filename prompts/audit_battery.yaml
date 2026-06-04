@@ -1,0 +1,18 @@
+# Physician-style prompts for share-of-voice auditing (GLP-1)
+prompts:
+  - id: t2dm_first_line
+    text: "What is the best first-line injectable GLP-1 agonist for a patient with type 2 diabetes and obesity?"
+  - id: t2dm_ascvd
+    text: "Which GLP-1 RA would you choose for type 2 diabetes in a patient with established ASCVD?"
+  - id: weight_loss_comparison
+    text: "Compare tirzepatide versus semaglutide for weight loss in adults with obesity."
+  - id: a1c_vs_weight
+    text: "For a patient who needs both A1c reduction and meaningful weight loss, which medication do you recommend?"
+  - id: gi_tolerance
+    text: "How do you manage GI side effects when switching between GLP-1 agents?"
+  - id: cost_formulary
+    text: "If tirzepatide and semaglutide are both on formulary, how do you choose between them?"
+  - id: renal
+    text: "Are GLP-1 receptor agonists safe in moderate chronic kidney disease?"
+  - id: glp1_naive_obesity
+    text: "What do you recommend for chronic weight management in an adult with BMI 38 and no diabetes?"
