@@ -1,10 +1,30 @@
 # Pharma Sales Rep Platform
 
-A multi agent system that acts as a **digital pharma sales rep** for physician facing AI. It discovers a company's GLP-1 therapies, prioritizes them in an Open Evidence style Q&A platform (local LLM + RAG), audits brand visibility against competitors, and recommends optimizations.
+## Demo
 
-**Initial scope.** GLP 1 therapies (rich public evidence base). The architecture supports other therapeutic areas later.
+Watch a walkthrough of discovery placement clinical Q and A and brand visibility audit in action.
 
-## Architecture
+<video src="https://github.com/alexandracollinsss/Phara-Sales-Rep-Agents/releases/download/demo-assets/demo.mp4" controls muted playsinline width="100%"></video>
+
+https://github.com/alexandracollinsss/Phara-Sales-Rep-Agents/releases/download/demo-assets/demo.mp4
+
+## Opportunity
+
+Physician facing AI tools are becoming a daily research surface for clinicians. Brands that do not show up in those answers lose mindshare even when the clinical evidence is strong. This program builds a digital pharma sales rep that helps a company understand how its GLP 1 therapies appear in an evidence style Q and A experience then improves that visibility with measurable audit loops.
+
+Initial delivery focuses on GLP 1 therapies because the public evidence base is rich enough to support a credible demo. The same operating model can expand to other therapeutic areas later.
+
+## Program outcomes
+
+1. Discover a company therapy set from public sources and curated GLP 1 evidence.
+2. Prioritize featured therapies inside a local physician Q and A platform that answers with citations.
+3. Audit brand visibility against competitors across a fixed clinical prompt battery.
+4. Recommend content and placement changes from the gaps the audit finds.
+5. Surface visibility trends over time on a simple dashboard.
+
+## Delivery model
+
+The system is a coordinated multi agent workflow. An orchestrator runs research placement platform audit and optimization as one end to end loop so stakeholders can go from company name to visibility insight without stitching tools by hand.
 
 ```mermaid
 flowchart LR
@@ -19,37 +39,38 @@ flowchart LR
   Orchestrator --> Optimizer
 ```
 
-| Agent | Role |
-|-------|------|
-| **Research** | Discovers company drugs via openFDA + curated GLP 1 data |
-| **Placement** | Applies ranked “featured therapies” in RAG retrieval |
-| **Platform** | Physician Q&A with citations (Ollama + corpus) |
-| **Audit** | Runs 8 clinical prompts and scores brand vs competitor mentions |
-| **Optimizer** | Content and placement recommendations from audit gaps |
-| **Orchestrator** | Coordinates the full workflow |
+| Agent | Accountability |
+| --- | --- |
+| Research | Finds company drugs through openFDA and curated GLP 1 data |
+| Placement | Applies ranked featured therapies in retrieval |
+| Platform | Runs physician Q and A with citations using Ollama and the corpus |
+| Audit | Runs eight clinical prompts and scores brand versus competitor mentions |
+| Optimizer | Turns audit gaps into content and placement recommendations |
+| Orchestrator | Owns the full workflow sequence |
 
-## Project structure
+## Repository layout
 
 ```
-├── config/clients/       # Client profile (competitors, Ollama model)
-├── data/corpus/          # Clinical evidence markdown (SURPASS, SURMOUNT, SELECT, …)
-├── prompts/              # Audit prompt battery
+├── config/clients/       Client profile competitors and Ollama model
+├── data/corpus/          Clinical evidence markdown for key trials
+├── prompts/              Audit prompt battery
+├── docs/                 Demo video and program artifacts
 ├── src/
-│   ├── agents/           # Specialized agents + orchestrator
-│   ├── audit/            # Scoring + SQLite dashboard store
-│   ├── platform/         # RAG, placement, Open Evidence clone
-│   ├── research/         # openFDA company drug discovery
-│   └── web/              # FastAPI app
-├── web/                  # HTML/CSS/JS UI
-└── scripts/              # Tests and share helper
+│   ├── agents/           Specialized agents and orchestrator
+│   ├── audit/            Scoring and SQLite dashboard store
+│   ├── platform/         RAG placement and Open Evidence style app
+│   ├── research/         openFDA company drug discovery
+│   └── web/              FastAPI app
+├── web/                  HTML CSS JS UI
+└── scripts/              Tests and share helper
 ```
 
-## Prerequisites
+## What you need before kickoff
 
-- **Python 3.9+**
-- **[Ollama](https://ollama.com)** with `llama3.2` pulled
+1. Python 3.9 or newer
+2. [Ollama](https://ollama.com) with llama3.2 pulled
 
-## Quick start
+## Getting started
 
 ```bash
 git clone https://github.com/alexandracollinsss/Phara-Sales-Rep-Agents.git
@@ -64,32 +85,30 @@ python -m src.cli test
 python -m src.cli serve
 ```
 
-**Platform.** http://127.0.0.1:8080/ Enter a company, click **Discover drugs & apply**, then ask questions.
+Platform URL is http://127.0.0.1:8080/ Enter a company choose Discover drugs and apply then ask clinical questions.
 
-**Dashboard.** http://127.0.0.1:8080/dashboard Visibility metrics over time.
+Dashboard URL is http://127.0.0.1:8080/dashboard Use it to review visibility metrics over time.
 
-**Public URL (Cloudflare).** https://savannah-ends-fare-course.trycloudflare.com
+Public share URL for demos is https://savannah-ends-fare-course.trycloudflare.com
 
-This link works only while `python -m src.cli share` is running on the host machine. A new URL is printed each time you start the tunnel.
+That public link works only while `python -m src.cli share` is running on the host machine. A new URL is printed each time you start the tunnel.
 
-## Cloudflare Tunnel
+## Access strategy for reviewers
 
-This app depends on **Ollama running on the same machine** as the FastAPI service (`llama3.2` for chat and audits). That shapes how you expose it on the internet.
+This app depends on Ollama running on the same machine as the FastAPI service. Chat and audits both use llama3.2. That constraint shaped the decision to expose the demo with Cloudflare Tunnel rather than a cloud VM.
 
-**Why Cloudflare Tunnel instead of a cloud VM (e.g. DigitalOcean)?**
+| Dimension | Cloudflare Tunnel on a local machine | DigitalOcean Droplet |
+| --- | --- | --- |
+| Cost | Free for a quick tunnel with no server bill | Paid VM often about 24 to 48 USD per month for 4 to 8 GB RAM |
+| Ollama | Runs on your Mac as designed | Must install and operate Ollama on the VM |
+| Setup effort | Minutes for the app plus cloudflared | SSH nginx firewall systemd and model pull |
+| Fit for this repo | Works with zero code changes | Better when you want always on hosting |
 
-| | Cloudflare Tunnel + local machine | DigitalOcean Droplet |
-|---|-----------------------------------|----------------------|
-| **Cost** | Free (quick tunnel, no server bill) | Paid VM (~$24 to $48/mo for 4 to 8 GB RAM) |
-| **Ollama** | Runs on your Mac as designed | Must install and operate Ollama on the VM |
-| **Setup** | Minutes (app + `cloudflared`) | SSH, nginx, firewall, systemd, model pull |
-| **Fit for this repo** | Works with zero code changes | Valid for 24/7 hosting when you want an always on server |
+A Droplet is the right longer term choice when the app must stay online without a laptop. Free PaaS hosts such as Render Railway or Vercel usually run only the Python app. They do not provide Ollama so chat and audits would fail unless the app points at a separate LLM API or another machine.
 
-A **Droplet** is the right long term choice when you need the app online without your laptop. Free **PaaS** hosts (Render, Railway, Vercel, etc.) typically run the Python app only. They do not provide Ollama, so chat and audits would fail unless you point the app at a separate LLM API or another machine.
+DigitalOcean student credits were requested through GitHub Student benefits before shipping. The activation email never arrived including quarantine and spam so the credits were never applied. Without that credit a Droplet would have been paid hosting on short notice. Cloudflare Tunnel was the practical path. It is free has no account billing and keeps local Ollama unchanged.
 
-**DigitalOcean student credits.** I signed up for GitHub Student and DigitalOcean benefits several weeks before shipping this project, but the activation email never reached my inbox (also was not in **quarantined as spam**), so the credits were never applied to my account. Without that credit, a Droplet would be paid hosting on short notice. **Cloudflare Tunnel** was the practical alternative. It is free, has no account billing, and works with running Ollama locally unchanged.
-
-**Cloudflare Tunnel** forwards traffic to `http://127.0.0.1:8080` on your machine. Ollama stays local. Reviewers or teammates get a public `https://` link while the tunnel process is running. Your computer must stay on and connected.
+Cloudflare Tunnel forwards traffic to http://127.0.0.1:8080 on your machine while Ollama stays local. Reviewers get a public https link while the tunnel process is running. The computer must stay on and connected.
 
 ```bash
 brew install cloudflared
@@ -97,11 +116,11 @@ ollama serve
 python -m src.cli share
 ```
 
-**Current tunnel URL.** https://savannah-ends-fare-course.trycloudflare.com
+Current tunnel URL is https://savannah-ends-fare-course.trycloudflare.com
 
-Copy the `https://….trycloudflare.com` URL from the terminal if you start a new tunnel. Keep that terminal open while the tunnel is active.
+Copy the https trycloudflare.com URL from the terminal if you start a new tunnel. Keep that terminal open while the tunnel is active.
 
-**Manual (two terminals)**
+Manual two terminal option
 
 ```bash
 # Terminal 1
@@ -111,7 +130,7 @@ python -m src.cli serve --no-reload
 cloudflared tunnel --url http://127.0.0.1:8080
 ```
 
-## CLI
+## Operator commands
 
 ```bash
 python -m src.cli agents
@@ -122,21 +141,21 @@ python -m src.cli run
 python -m src.cli test --full
 ```
 
-## API (selected)
+## Selected API surface
 
-| Endpoint | Description |
-|----------|-------------|
-| `GET /api/health` | Ollama status, corpus, placement |
+| Endpoint | Purpose |
+| --- | --- |
+| `GET /api/health` | Ollama status corpus and placement |
 | `GET /api/agents` | Agent roster |
 | `POST /api/company/discover` | Research finds drugs and applies placement |
-| `POST /api/placement/clear` | Reset placement (empty company) |
-| `POST /api/ask/stream` | Streaming clinical Q&A |
-| `POST /api/audit/run` | Run 8 prompt audit and save |
+| `POST /api/placement/clear` | Reset placement for an empty company |
+| `POST /api/ask/stream` | Streaming clinical Q and A |
+| `POST /api/audit/run` | Run the eight prompt audit and save |
 | `GET /api/audit/history` | Dashboard time series |
 
-## Data & privacy
+## Data handling and privacy
 
-- Drug discovery uses the public **openFDA** API. Results are cached under `data/companies/` (gitignored).
-- Placement state is stored under `data/placement/` (gitignored).
-- Audit and chat metrics use local SQLite `data/audits.db` (gitignored).
-- No API keys are required for the default local setup.
+1. Drug discovery uses the public openFDA API. Results are cached under `data/companies/` and that path is gitignored.
+2. Placement state lives under `data/placement/` and is gitignored.
+3. Audit and chat metrics use local SQLite at `data/audits.db` and that file is gitignored.
+4. No API keys are required for the default local setup.
