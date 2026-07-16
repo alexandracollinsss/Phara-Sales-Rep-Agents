@@ -4,7 +4,9 @@
 
 Watch a walkthrough of discovery placement clinical Q and A and brand visibility audit in action.
 
-[Play the demo video](https://github.com/alexandracollinsss/Phara-Sales-Rep-Agents/blob/main/docs/demo.mp4)
+[Play the 90 second trailer](https://github.com/alexandracollinsss/Phara-Sales-Rep-Agents/blob/main/docs/demo-trailer.mp4)
+
+[Download the full demo](https://github.com/alexandracollinsss/Phara-Sales-Rep-Agents/releases/download/demo-assets/demo.mp4)
 
 ## Opportunity
 
