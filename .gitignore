@@ -22,7 +22,7 @@ data/companies/*.json
 data/placement/*.json
 !data/placement/.gitkeep
 
-# Local demo media (hosted on GitHub release demo-assets)
-docs/*.mp4
+# Local oversized demo sources (compressed demo.mp4 is tracked)
 docs/*.mov
 docs/*.m4v
+docs/*-source.*
